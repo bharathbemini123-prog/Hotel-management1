@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Star, MapPin, X, Building2, CheckCircle, XCircle, CalendarDays, Wifi, Coffee, Car, Dumbbell, AlertTriangle, Plus } from 'lucide-react';
 
-const API_ROOMS = 'http://localhost:8082/rooms';
-const API_BOOKINGS = 'http://localhost:8082/bookings';
+const API_ROOMS = `${process.env.REACT_APP_API_URL || 'http://localhost:8082'}/rooms`;
+const API_BOOKINGS = `${process.env.REACT_APP_API_URL || 'http://localhost:8082'}/bookings`;
 
 const hotels = [
   {

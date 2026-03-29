@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { FileText, CreditCard, Banknote, Smartphone, Globe, CheckCircle2, Building2, CalendarDays, Receipt, Printer } from 'lucide-react';
 
-const API_BOOKINGS = 'http://localhost:8082/bookings';
-const API_ROOMS = 'http://localhost:8082/rooms';
+const API_BOOKINGS = `${process.env.REACT_APP_API_URL || 'http://localhost:8082'}/bookings`;
+const API_ROOMS = `${process.env.REACT_APP_API_URL || 'http://localhost:8082'}/rooms`;
 const TAX = 0.18;
 
 const Checkout = () => {

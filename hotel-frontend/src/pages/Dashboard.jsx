@@ -11,9 +11,9 @@ const Dashboard = ({ user }) => {
     const fetchData = async () => {
       try {
         const [roomsRes, bookingsRes, customersRes] = await Promise.all([
-          fetch('http://localhost:8082/rooms').catch(() => null),
-          fetch('http://localhost:8082/bookings').catch(() => null),
-          fetch('http://localhost:8082/customers').catch(() => null),
+          fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8082'}/rooms`).catch(() => null),
+          fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8082'}/bookings`).catch(() => null),
+          fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8082'}/customers`).catch(() => null),
         ]);
 
         if (roomsRes?.ok) {

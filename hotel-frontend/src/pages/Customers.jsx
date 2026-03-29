@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { Users, Mail, Phone, MapPin } from 'lucide-react';
 
-const API = 'http://localhost:8082/customers';
+const API = `${process.env.REACT_APP_API_URL || 'http://localhost:8082'}/customers`;
 
 const Customers = () => {
   const [customers, setCustomers] = useState([]);
