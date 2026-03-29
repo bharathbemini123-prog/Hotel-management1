@@ -139,7 +139,7 @@ const Dashboard = ({ user }) => {
   const handleCancel = async (id) => {
     if (!window.confirm('Are you sure you want to cancel this booking?')) return;
     try {
-      const res = await fetch(`http://localhost:8082/bookings/${id}`, { method: 'DELETE' });
+      const res = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:8082'}/bookings/${id}`, { method: 'DELETE' });
       if (res.ok) {
         // Simple way to refresh: re-run the fetchData effect or just reload
         window.location.reload();
