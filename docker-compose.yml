@@ -1,0 +1,40 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: hotel-db
+    restart: always
+    environment:
+      MYSQL_DATABASE: hotel_db
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: 
+      context: ./hotel
+    container_name: hotel-backend
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: jdbc:mysql://db:3306/hotel_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      DB_USERNAME: root
+      DB_PASSWORD: root
+    ports:
+      - "8082:8082"
+
+  frontend:
+    build: 
+      context: ./hotel-frontend
+    container_name: hotel-frontend-prod
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
