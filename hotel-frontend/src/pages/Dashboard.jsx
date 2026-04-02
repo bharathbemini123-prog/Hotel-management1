@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Building2, CalendarDays, IndianRupee, Users, TrendingUp, ArrowUpRight } from 'lucide-react';
+import { Building2, CalendarDays, IndianRupee, TrendingUp, Users, ArrowUpRight } from 'lucide-react';
 
 const Dashboard = ({ user }) => {
   const [rooms, setRooms] = useState([]);
