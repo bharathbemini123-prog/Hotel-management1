@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { CalendarDays, Plus, Building2, Hotel, Users } from 'lucide-react';
 
-const API_BOOKINGS = `${process.env.REACT_APP_API_URL || 'http://localhost:8082'}/bookings`;
-const API_CUSTOMERS = `${process.env.REACT_APP_API_URL || 'http://localhost:8082'}/customers`;
-const API_ROOMS = `${process.env.REACT_APP_API_URL || 'http://localhost:8082'}/rooms`;
+const API_BOOKINGS = `${process.env.REACT_APP_API_URL || 'http://localhost:8080'}/bookings`;
+const API_CUSTOMERS = `${process.env.REACT_APP_API_URL || 'http://localhost:8080'}/customers`;
+const API_ROOMS = `${process.env.REACT_APP_API_URL || 'http://localhost:8080'}/rooms`;
 
 const Bookings = ({ user }) => {
   const isAdmin = user?.role === 'admin' || user?.email === 'bk@gmail.com' || user?.email === 'admin@luxestay.com';
@@ -25,7 +25,7 @@ const Bookings = ({ user }) => {
     checkOut: ''
   });
 
-  const fetchBookings = async () => {
+  const fetchBookings = useCallback(async () => {
     try {
       const res = await fetch(API_BOOKINGS);
         if (res.ok) {
@@ -36,15 +36,14 @@ const Bookings = ({ user }) => {
         setBookings(userBookings);
       }
     } catch { setBookings([]); }
-  };
+  }, [isAdmin, user]);
 
-  const fetchRooms = async () => {
+  const fetchRooms = useCallback(async () => {
     try {
       const res = await fetch(API_ROOMS).catch(() => null);
       if (res?.ok) {
         setRooms(await res.json());
       } else {
-        // Fallback robust room data: 15 rooms per hotel for total 90 rooms
         const hotelsList = [
           'LuxeStay Chennai', 'LuxeStay Bangalore', 'LuxeStay Kochi',
           'LuxeStay Hyderabad', 'LuxeStay Munnar', 'LuxeStay Ooty'
@@ -67,9 +66,9 @@ const Bookings = ({ user }) => {
         setRooms(fallbackRooms);
       }
     } catch { setRooms([]); }
-  };
+  }, []);
 
-  useEffect(() => { fetchBookings(); fetchRooms(); }, []);
+  useEffect(() => { fetchBookings(); fetchRooms(); }, [fetchBookings, fetchRooms]);
 
   const getLocalRoomNumber = (roomId) => {
     const room = rooms.find(r => r.id === parseInt(roomId));
@@ -84,7 +83,6 @@ const Bookings = ({ user }) => {
     const roomNo = getLocalRoomNumber(room.id);
     const todayStr = new Date().toISOString().split('T')[0];
 
-    // Check if this room is already booked for today
     const activeBookings = bookings.filter(b => 
       (b.status === 'Confirmed' || b.status === 'Checked In') && 
       b.roomType.includes(`Room #${roomNo}`) &&
@@ -101,7 +99,6 @@ const Bookings = ({ user }) => {
   };
 
   const availableRooms = rooms.filter(r => {
-    // If a hotel is typed/selected, filter by it
     if (form.hotelName && !r.hotelName.toLowerCase().includes(form.hotelName.toLowerCase())) return false;
     return getAvailableStatus(r);
   });
@@ -172,7 +169,6 @@ const Bookings = ({ user }) => {
       } else throw new Error();
     } catch {
       toast.error('Failed to cancel booking. (Server Offline)', { theme: 'dark' });
-      // For demo purposes, we could filter it out locally if we had a local state that persisted
     }
   };
 
@@ -295,7 +291,7 @@ const Bookings = ({ user }) => {
                     <td style={{ fontWeight: 700, color: 'var(--primary)' }}>#{b.id}</td>
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        <div className="avatar" style={{ width: 28, height: 28, fontSize: '0.75rem' }}>{b.customerName?.charAt(0)}</div>
+                        <img src="/images/room_1.png" alt="Deluxe Room Thumbnail" style={{ width: 28, height: 28, borderRadius: '50%', objectFit: 'cover' }} />
                         {b.customerName}
                       </div>
                     </td>
